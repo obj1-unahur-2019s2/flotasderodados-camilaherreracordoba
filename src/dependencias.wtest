@@ -1,0 +1,14 @@
+import rodados.*
+
+test "test de deportes" {
+/*La flota de deportes incluye a:
+ *  `cachito`, un Corsa azul,
+ *  un Corsa verde, 
+ * un Kwid con el tanque adicional puesto; y
+ *  un auto especial con estas características: capacidad 5 pasajeros, 
+ * velocidad máxima 160 km/h, peso 1200 kg, color beige.
+*/
+	var deportes = new Dependencia( empleados = 45 )	
+	deportes.agregarAFlota(new ChevroletCorsa())
+
+}
