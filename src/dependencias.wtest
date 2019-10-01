@@ -1,14 +1,40 @@
 import rodados.*
 
-test "test de deportes" {
-/*La flota de deportes incluye a:
- *  `cachito`, un Corsa azul,
- *  un Corsa verde, 
- * un Kwid con el tanque adicional puesto; y
- *  un auto especial con estas características: capacidad 5 pasajeros, 
- * velocidad máxima 160 km/h, peso 1200 kg, color beige.
-*/
-	var deportes = new Dependencia( empleados = 45 )	
-	deportes.agregarAFlota(new ChevroletCorsa())
-
+describe "test de rodados" {
+	
+	test "test de deportes" {
+		
+		var deportes = new Dependencia( empleados = 45 )
+		var cachito = new ChevroletCorsa ( color = rojo )	
+	
+		deportes.agregarAFlota(new ChevroletCorsa( color = azul))
+		deportes.agregarAFlota(new ChevroletCorsa( color = verde))
+		deportes.agregarAFlota(new RenaultKwid( tieneTanqueAdicional = true ))
+		deportes.agregarAFlota(cachito)
+		deportes.agregarAFlota(new AutoEspecial( capacidad = 5, velocidadMaxima = 160, peso = 1200, color = beige ))
+		assert.equals(6450, deportes.pesoTotalFlota())
+		assert.that(deportes.estaBienEquipada())
+		assert.equals(7, deportes.capacidadTotalEnColor(azul))
+		assert.that(deportes.colorDelRodadoMasRapido() == beige )
+		assert.that(deportes.esGrande())
+	}
+	
+	test "test de cultural" {
+		
+		var cultural = new Dependencia( empleados = 31 )
+		var cachito = new ChevroletCorsa ( color = rojo )	
+	
+		cultural.agregarAFlota(new RenaultKwid( tieneTanqueAdicional = true ))
+		cultural.agregarAFlota(new RenaultKwid( tieneTanqueAdicional = true ))
+		cultural.agregarAFlota(new RenaultKwid( tieneTanqueAdicional = false ))
+		cultural.agregarAFlota(cachito)
+		cultural.agregarAFlota(trafic)
+		trafic.motor(bataton)
+		trafic.interior(popular)
+		assert.equals(9712, cultural.pesoTotalFlota())
+		assert.notThat(cultural.estaBienEquipada())
+		assert.equals(10, cultural.capacidadTotalEnColor(azul))
+		assert.that(cultural.colorDelRodadoMasRapido() == rojo )
+		assert.notThat(cultural.esGrande())
+	}
 }

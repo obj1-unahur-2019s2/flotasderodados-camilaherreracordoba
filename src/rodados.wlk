@@ -3,8 +3,8 @@ class ChevroletCorsa {
   method capacidad() { 
     return 4
   }
-  method velocidadMaxima()
-  method peso()
+  method velocidadMaxima(){ return 150 }
+  method peso(){ return 1300 }
 }
 
 class RenaultKwid {
@@ -27,22 +27,25 @@ class RenaultKwid {
 
 
 object trafic {
-  var property motor
-  var property interior
+	var property motor
+	var property interior
+	
 
-  method peso() {
-    return 4000 + motor.peso() + interior.peso()
-  }
-  method capacidad() { 
-  	return interior.capacidad()
-  }
+	method peso() {
+    	return 4000 + motor.peso() + interior.peso()
+    }
+	method capacidad() { 
+		return interior.capacidad()
+	}
+	method velocidadMaxima() { return motor.velocidadMaxima()}
+	method color() { return beige}
 }
 
 // una opción: clase Motor
-class Motor { 
+/*class Motor { 
 	var property peso 
 	var property velocidadMaxima
-}
+}*/
 /* uno **pulenta** (que pesa 800 kg y permite una velocidad máxima de 130 km/h)
  * y otro **batatón** (que pesa 500 kg y permite una velocidad máxima de 80 km/h)
  */
@@ -76,12 +79,11 @@ class AutoEspecial {
 }
 
 
-// sería como el depósito, maneja una colección de rodados
 class Dependencia {
 	var rodados = []
 	var property empleados
-/*
- * - `agregarAFlota(rodado)` y `quitarDeFlota(rodado)`.*/
+	var property pedidos = []
+
  
 	method agregarAFlota(rodado) {
 		rodados.add(rodado)
@@ -90,36 +92,34 @@ class Dependencia {
 	method quitarDeFlota(rodado) {
 		rodados.remove(rodado)
 	}
- /*
-- `pesoTotalFlota()`, la suma del peso de cada rodado afectado a la flota.*/
+
 	method pesoTotalFlota() {
 		return rodados.sum({ rodado => rodado.peso()})
 	}
-/*- `estaBienEquipada()`, es verdadero si la flota tiene al menos 3 rodados,*/
+
 	method estaBienEquipada() {
-		return rodados.count() < 3 and rodados.all({rodado => rodado.velocidadMaxima() >= 100 })
+		return rodados.size() > 2 and rodados.all({rodado => rodado.velocidadMaxima() >= 100 })
  	} 
- /*  y además, _todos_ los rodados de la flota pueden ir al menos a 100 km/h.*/
+
  	method capacidadTotalEnColor(color){
  		return rodados.filter({rodado => rodado.color() == color }).sum({rodado => rodado.capacidad()})
  	}
-/*- `capacidadTotalEnColor(color)`, la cantidad total de personas que puede transportar
-*  la flota afectada a la dependencia, considerando solamente los rodados del color indicado.
-- `colorDelRodadoMasRapido()`, eso.
-*/
 	method colorDelRodadoMasRapido() {
-		return rodados.find({ rodados.velocidadMaxima().max()}).color()
+		return rodados.max({ rodado => rodado.velocidadMaxima()}).color()
 	}
-/*- `capacidadFaltante()`, que es el resultado de restar, de la cantidad de empleados,
-*  la capacidad sumada de los vehículos de la flota.*/
 	method capacidadFaltante() {
 		return rodados.sum({ rodados.capacidad() }) - self.empleados()
 	}
-	 /*
-- `esGrande()`, la condición es que la dependencia tenga al menos 40 empleados y 5 rodados.
- */
+
  	method esGrande() {
  		return rodados.size() >= 5 and self.empleados() >= 40
+ 	}
+ 	
+ 	method totalPasajeros() {
+ 		return pedidos.sum({ pedido => pedido.cantidadPasajeros()})
+ 	}
+ 	method pedidosQueNoSePuedenSatisfacer() {
+ 		return pedidos.filter({pedido => pedido.puedeRealizarPedido()})// solucionar
  	}
 }
 
@@ -127,9 +127,28 @@ class Dependencia {
 object azul {}
 object rojo {}
 object verde {}
+object beige {}
+object negro {}
 
-
-// un ejemplo de cómo configurar la trafic en un test
-//	test "pruebo la trafic" { 
-//  	trafic.motor(bataton)
+class Pedido {
+	var property distancia 
+	var property tiempoMaximo
+	var property cantidadPasajeros
+	var property coloresIncompatibles = #{}
+	
+	method velocidadRequerida() {
+		return distancia / tiempoMaximo
+	}
+	
+	method puedeRealizarPedido(auto) {
+		return (auto.velocidadMaxima()- self.velocidadRequerida() > 10) 
+				and (auto.capacidad() >= cantidadPasajeros ) 
+				and  not(coloresIncompatibles.any({color => color == auto.color()})) 
+	}
+	method acelerar() {
+		tiempoMaximo -=1
+	}
+	method relajar() {
+		tiempoMaximo +=1
+	}
 }

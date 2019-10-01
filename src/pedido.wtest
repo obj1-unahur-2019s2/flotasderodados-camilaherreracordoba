@@ -1,0 +1,8 @@
+import rodados.*
+test "test de pedido" {
+	var viaje = new Pedido( distancia = 960, tiempoMaximo = 8, cantidadPasajeros = 4, coloresIncompatibles = #{ azul, negro} ) 
+	var cachito = new ChevroletCorsa ( color = rojo )
+	assert.that(viaje.puedeRealizarPedido(cachito))
+	viaje.coloresIncompatibles().add(rojo)
+	assert.notThat(viaje.puedeRealizarPedido(cachito))
+}
