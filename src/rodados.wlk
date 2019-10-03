@@ -119,7 +119,13 @@ class Dependencia {
  		return pedidos.sum({ pedido => pedido.cantidadPasajeros()})
  	}
  	method pedidosQueNoSePuedenSatisfacer() {
- 		return pedidos.filter({pedido => pedido.puedeRealizarPedido()})// solucionar
+ 		return pedidos.filter({pedido => not rodados.any({ auto => pedido.puedeRealizarPedido(auto)})})
+ 	}
+ 	method esColorIncompatible(miColor){
+ 		return pedidos.all({ pedido => pedido.coloresIncompatibles().any({ color =>  color == miColor }) })
+ 	}
+ 	method relajarPedidos(){
+ 		
  	}
 }
 
